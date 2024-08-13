@@ -67,7 +67,6 @@ namespace Movie_Reservation.Controllers
 
             _context.SaveChanges();
             return new JsonResult(Ok(theater));
-
         }
 
         /// <summary>
