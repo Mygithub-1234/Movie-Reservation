@@ -1,18 +1,21 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 
-namespace Movie_Reservation.Models
+namespace Movie_Reservation.Models;
+
+public partial class Show
 {
-    public class Show
-    {
-        [Key]
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        public int Theater_Id { get; set; }
+    public int? MovieId { get; set; }
 
-        public int Movie_Id { get; set; }
+    public int? ScreenId { get; set; }
 
-        public List<Seat> Available_Seats { get; set; }
+    public int? AvailableSeats { get; set; }
 
-    }
+    public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+
+    public virtual Movie? Movie { get; set; }
+
+    public virtual Screen? Screen { get; set; }
 }

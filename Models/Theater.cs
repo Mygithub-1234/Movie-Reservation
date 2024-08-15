@@ -1,15 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 
-namespace Movie_Reservation.Models
+namespace Movie_Reservation.Models;
+
+public partial class Theater
 {
-    public class Theater
-    {
-        [Key]
-        public int Id { get; set; }
-        public string TheaterName { get; set; }
+    public int Id { get; set; }
 
-        public List<Movie> Movies { get; set; }
-    }
+    public int? MovieId { get; set; }
+
+    public string? Name { get; set; }
+
+    public string? City { get; set; }
+
+    public string? ContactInfo { get; set; }
+
+    public virtual Movie? Movie { get; set; }
+
+    public virtual ICollection<Screen> Screens { get; set; } = new List<Screen>();
 }

@@ -4,10 +4,11 @@ using Movie_Reservation.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddDbContext<ApiContext>(op => op.UseInMemoryDatabase("Moviedb"));
+//builder.Services.AddDbContext<ApiContext>(op => op.UseInMemoryDatabase("Moviedb"));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddDbContext<MovieBookingContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));                                                    
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

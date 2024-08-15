@@ -1,12 +1,19 @@
-﻿namespace Movie_Reservation.Models
+﻿using System;
+using System.Collections.Generic;
+
+namespace Movie_Reservation.Models;
+
+public partial class Booking
 {
-    public class Booking
-    {
-        public int Id { get; set; }
-        public int Show_Id { get; set; }
-        public int No_Of_Tickets { get; set; }
-        public int Amount { get; set; }
-        public int User_Id { get; set; }
-        public DateTime BookingDate { get; set; }
-    }
+    public int Id { get; set; }
+
+    public int? ShowId { get; set; }
+
+    public int? NoOfTickets { get; set; }
+
+    public int? Amount { get; set; }
+
+    public int? BookedByUser { get; set; }
+
+    public virtual Show? Show { get; set; }
 }

@@ -8,9 +8,9 @@ namespace Movie_Reservation.Controllers
     [ApiController]
     public class TheaterController : Controller
     {
-        private readonly ApiContext _context;
+        private readonly MovieBookingContext _context;
 
-        public TheaterController(ApiContext context)
+        public TheaterController(MovieBookingContext context)
         {
             _context = context;
         }
@@ -20,15 +20,28 @@ namespace Movie_Reservation.Controllers
         /// </summary>
         /// <param name="theater"></param>
         /// <returns></returns>
-        [HttpPost("addTheater")]
-        public JsonResult Create(Theater theater)
-        {
-            _context.Theaters.Add(theater);
-            //Save changes
-            _context.SaveChanges();
+        //[HttpPost("addTheater")]
+        //public JsonResult Create(TheaterRequest theater)
+        //{
+        //    _context.Theaters.Add(theater);
+        //    //Save changes
+        //    _context.SaveChanges();
 
-            return new JsonResult(Ok(theater));
+        //    return new JsonResult(Ok(theater));
+        //}
+        [HttpPost("addTheater")]
+        public async Task<IActionResult> Create(TheaterRequest theater)
+        {
+            var request = new Theater() { 
+                Name = theater.Name,
+                City = theater.City,
+                ContactInfo = theater.ContactInfo
+            };
+            await _context.Theaters.AddAsync(request);
+            await _context.SaveChangesAsync();
+            return Ok(request);
         }
+
         /// <summary>
         /// Gets specified theater
         /// </summary>
@@ -36,7 +49,7 @@ namespace Movie_Reservation.Controllers
         [HttpGet("theater/search/theatername")]
         public JsonResult GetTheaterById([FromBody]string theatername)
         {
-            var result = _context.Theaters.Where(m => m.TheaterName== theatername).FirstOrDefault();
+            var result = _context.Theaters.Where(m => m.Name== theatername).FirstOrDefault();
             return new JsonResult(Ok(result));
         }
 
@@ -56,14 +69,15 @@ namespace Movie_Reservation.Controllers
         /// <param name="theater"></param>
         /// <returns></returns>
         [HttpPut]
-        public JsonResult Edit(Theater theater)
+        public JsonResult Edit(TheaterRequest theater)
         {
-            var theaterInDb = _context.Theaters.Find(theater.Id);
+            var theaterInDb = _context.Theaters.Find(theater.Name);
 
             if (theaterInDb == null)
                 return new JsonResult(NotFound());
-            theaterInDb.TheaterName = theater.TheaterName;
-            //theaterInDb.MovieId = theater.MovieId;
+            theaterInDb.Name = theater.Name;
+            theaterInDb.City = theater.City;
+            theaterInDb.ContactInfo = theater.ContactInfo;
 
             _context.SaveChanges();
             return new JsonResult(Ok(theater));

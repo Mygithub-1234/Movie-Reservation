@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Movie_Reservation.Models;
 
-public partial class Admin
+public partial class GeneralUser
 {
     public int Id { get; set; }
 

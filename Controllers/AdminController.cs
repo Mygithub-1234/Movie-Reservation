@@ -8,9 +8,9 @@ namespace Movie_Reservation.Controllers
     [ApiController]
     public class AdminController : ControllerBase
     {
-        private readonly ApiContext _context;
+        private readonly MovieBookingContext _context;
 
-        public AdminController(ApiContext context)
+        public AdminController(MovieBookingContext context)
         {
             _context = context;
         }
@@ -21,9 +21,9 @@ namespace Movie_Reservation.Controllers
         /// <param name="user"></param>
         /// <returns></returns>
         [HttpPost("register")]
-        public JsonResult Register(User user)
+        public JsonResult Register(GeneralUser user)
         {
-            _context.Users.Add(user);
+            _context.GeneralUsers.Add(user);
             //Save changes
             _context.SaveChanges();
 
@@ -37,9 +37,9 @@ namespace Movie_Reservation.Controllers
         /// <returns></returns>
 
         [HttpPost("login")]
-        public JsonResult Login(User user)
+        public JsonResult Login(GeneralUser user)
         {
-            var result = _context.Users.Where(s => s.UserName == user.UserName && s.Password == user.Password && s.IsActive == 1).FirstOrDefault();
+            var result = _context.GeneralUsers.Where(s => s.Name == user.Name && s.Password == user.Password).FirstOrDefault();
             if (result != null)
             {
                 return new JsonResult(Ok(user));
@@ -58,9 +58,9 @@ namespace Movie_Reservation.Controllers
         /// <returns></returns>
 
         [HttpPost("forgot-password")]
-        public ActionResult ForgotPassword(User model)
+        public ActionResult ForgotPassword(GeneralUser model)
         {
-            var user = _context.Users.Find(model.UserEmail);
+            var user = _context.GeneralUsers.Find(model.Email);
             if (user == null)
 
             {

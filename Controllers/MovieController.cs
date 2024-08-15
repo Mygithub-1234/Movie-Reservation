@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Movie_Reservation.Data;
 using Movie_Reservation.Models;
 
@@ -9,9 +10,9 @@ namespace Movie_Reservation.Controllers
     [ApiController]
     public class MovieController : ControllerBase
     {
-        private readonly ApiContext _context;
+        private readonly MovieBookingContext _context;
 
-        public MovieController(ApiContext context)
+        public MovieController(MovieBookingContext context)
         {
             _context = context; 
         }
@@ -21,22 +22,27 @@ namespace Movie_Reservation.Controllers
         /// <param name="movie"></param>
         /// <returns></returns>
         [HttpPost("addmovie")]
-        public JsonResult Create(Movie movie)
+        public async Task<IActionResult> Create(MovieRequest movie)
         {
-            _context.Movies.Add(movie);
-            //Save changes
-            _context.SaveChanges();
-
-            return new JsonResult(Ok(movie));
+            var request = new Movie()
+            {
+                Title = movie.Title,
+                Description = movie.Description,
+                Genre = movie.Genre,
+                ReleaseDate = movie.ReleaseDate
+            };
+            await _context.Movies.AddAsync(request);
+            await _context.SaveChangesAsync();
+            return Ok(request);
         }
         /// <summary>
         /// Gets specified movie by name
         /// </summary>
         /// <returns></returns>
         [HttpGet("movies/search/moviename")]
-        public JsonResult GetMovieByName([FromBody]string moviename)
+        public JsonResult GetMovieByName(string moviename)
         {
-            var result =_context.Movies.Where(m => m.MovieName== moviename).FirstOrDefault();
+            var result =_context.Movies.Where(m => m.Title== moviename).FirstOrDefault();
             return new JsonResult(Ok(result));
         }
         /// <summary>
@@ -55,14 +61,15 @@ namespace Movie_Reservation.Controllers
         /// <param name="movie"></param>
         /// <returns></returns>
         [HttpPut("UpdateMovie")]
-        public JsonResult Edit(Movie movie)
+        public JsonResult Edit(MovieRequest movie)
         {
-            var movieInDb = _context.Movies.Find(movie.Id);
+            var movieInDb = _context.Movies.Find(movie.Title);
 
             if (movieInDb == null)
                 return new JsonResult(NotFound());
-            movieInDb.MovieType = movie.MovieType;
-            movieInDb.MovieName = movie.MovieName;
+            movieInDb.Genre = movie.Genre;
+            movieInDb.Title = movie.Title;
+            movieInDb.Description = movie.Description;
 
             _context.SaveChanges();
             return new JsonResult(Ok(movie));
