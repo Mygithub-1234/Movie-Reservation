@@ -20,15 +20,6 @@ namespace Movie_Reservation.Controllers
         /// </summary>
         /// <param name="theater"></param>
         /// <returns></returns>
-        //[HttpPost("addTheater")]
-        //public JsonResult Create(TheaterRequest theater)
-        //{
-        //    _context.Theaters.Add(theater);
-        //    //Save changes
-        //    _context.SaveChanges();
-
-        //    return new JsonResult(Ok(theater));
-        //}
         [HttpPost("addTheater")]
         public async Task<IActionResult> Create(TheaterRequest theater)
         {
@@ -46,7 +37,7 @@ namespace Movie_Reservation.Controllers
         /// Gets specified theater
         /// </summary>
         /// <returns></returns>
-        [HttpGet("theater/search/theatername")]
+        [HttpGet("search/theatername")]
         public JsonResult GetTheaterById([FromBody]string theatername)
         {
             var result = _context.Theaters.Where(m => m.Name== theatername).FirstOrDefault();
@@ -57,7 +48,7 @@ namespace Movie_Reservation.Controllers
         /// Gets all available theaters
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet("all")]
         public JsonResult GetAll()
         {
             var result = _context.Theaters.ToList();
@@ -68,8 +59,8 @@ namespace Movie_Reservation.Controllers
         /// </summary>
         /// <param name="theater"></param>
         /// <returns></returns>
-        [HttpPut]
-        public JsonResult Edit(TheaterRequest theater)
+        [HttpPut("update/theater")]
+        public JsonResult Edit(Theater theater)
         {
             var theaterInDb = _context.Theaters.Find(theater.Name);
 
@@ -81,7 +72,6 @@ namespace Movie_Reservation.Controllers
 
             _context.SaveChanges();
             return new JsonResult(Ok(theater));
-
         }
 
         /// <summary>
@@ -89,7 +79,7 @@ namespace Movie_Reservation.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpDelete]
+        [HttpDelete("delete/theaterdelrequest")]
         public JsonResult Delete(int id)
         {
             var result = _context.Theaters.Find(id);

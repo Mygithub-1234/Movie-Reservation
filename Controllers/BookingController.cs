@@ -16,7 +16,6 @@ namespace Movie_Reservation.Controllers
             _context = context;
         }
 
-        #region
         /// <summary>
         /// Books Tickets
         /// </summary>
@@ -59,7 +58,7 @@ namespace Movie_Reservation.Controllers
                 // Handle exception
                 return StatusCode(500, ex.Message);
             }
-            #endregion
+
 
         }
     }
